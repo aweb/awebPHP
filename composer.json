@@ -1,0 +1,26 @@
+{
+  "name": "aweb/aweb-framework",
+  "description": "The Simple PHP Framework.",
+  "keywords": ["framework", "aweb"],
+  "license": "Apache 2.0",
+  "type": "project",
+  "require": {
+    "zircote/swagger-php": "2.0.0",
+    "nikic/fast-route": "^1.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Utils\\": "Utils",
+      "Bootstrap\\": "Bootstrap",
+      "Handler\\": "App\\Handler",
+      "Service\\": "App\\Service",
+      "Model\\": "App\\Model"
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}

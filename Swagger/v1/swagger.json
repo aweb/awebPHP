@@ -1,0 +1,253 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "aweb-framework API\u6587\u6863",
+        "description": "aweb-framework API\u6587\u6863",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/v1/demo/list": {
+            "get": {
+                "tags": [
+                    "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
+                ],
+                "summary": "\u5206\u9875\u83b7\u53d6\u6a21\u7248\u5217\u8868",
+                "description": "get list by page",
+                "operationId": "get_list",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "\u5f53\u524d\u9875",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "\u6bcf\u9875\u5927\u5c0f",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "\u6807\u9898\u540d\u79f0",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "success": {
+                        "description": "\u65e0\u5f02\u5e38\u8fd4\u56de\u67e5\u8be2\u5217\u8868\u6570\u636e",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessModel"
+                        }
+                    },
+                    "failed": {
+                        "description": "\u53ef\u80fd\u8fd4\u56de\u7684\u9519\u8bef\u7801, [-2,-1,10001]",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/demo/info/{id}": {
+            "get": {
+                "tags": [
+                    "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
+                ],
+                "summary": "\u6839\u636eID\u83b7\u53d6\u8be6\u60c5",
+                "description": "get info by id",
+                "operationId": "info",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "success": {
+                        "description": "\u65e0\u5f02\u5e38\u8fd4\u56de\u67e5\u8be2\u8be6\u60c5\u6570\u636e",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessModel"
+                        }
+                    },
+                    "failed": {
+                        "description": "\u53ef\u80fd\u8fd4\u56de\u7684\u9519\u8bef\u7801, [-2,-1,10001]",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/demo/create": {
+            "post": {
+                "tags": [
+                    "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
+                ],
+                "summary": "\u521b\u5efa",
+                "description": "create",
+                "operationId": "create",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "success": {
+                        "description": "\u65e0\u5f02\u5e38\u8fd4\u56de\u67e5\u8be2\u8be6\u60c5\u6570\u636e",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessModel"
+                        }
+                    },
+                    "failed": {
+                        "description": "\u53ef\u80fd\u8fd4\u56de\u7684\u9519\u8bef\u7801, [-2,-1,10001]",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/demo/update": {
+            "put": {
+                "tags": [
+                    "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
+                ],
+                "summary": "\u521b\u5efa",
+                "description": "update",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "success": {
+                        "description": "\u65e0\u5f02\u5e38\u8fd4\u56de\u67e5\u8be2\u8be6\u60c5\u6570\u636e",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessModel"
+                        }
+                    },
+                    "failed": {
+                        "description": "\u53ef\u80fd\u8fd4\u56de\u7684\u9519\u8bef\u7801, [-2,-1,10001]",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/demo/delete": {
+            "delete": {
+                "tags": [
+                    "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
+                ],
+                "summary": "\u5220\u9664",
+                "description": "delete",
+                "operationId": "delete",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "success": {
+                        "description": "\u65e0\u5f02\u5e38\u8fd4\u56de\u67e5\u8be2\u8be6\u60c5\u6570\u636e",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessModel"
+                        }
+                    },
+                    "failed": {
+                        "description": "\u53ef\u80fd\u8fd4\u56de\u7684\u9519\u8bef\u7801, [-2,-1,10001]",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "SuccessModel": {
+            "required": [
+                "code",
+                "msg",
+                "data"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "ErrorModel": {
+            "required": [
+                "code",
+                "msg",
+                "data"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    }
+}
