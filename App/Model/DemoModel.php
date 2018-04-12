@@ -16,6 +16,8 @@ class DemoModel extends BaseModel
      * @return string
      */
     function test($userName) {
-        return 'Welcome '.$userName;
+        $db = $this->read();
+        $datas = $db->select("user", "*", ['id[>=]'=>1]);
+        return 'Welcome '.$userName."<>".json_encode($datas);
     }
 }

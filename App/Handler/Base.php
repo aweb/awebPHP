@@ -1,10 +1,14 @@
 <?php
 /**
+ * @SWG\Swagger(
+ *     schemes={"http"},
+ *     host="doc.af.com",
+ *     basePath="/v2",
  * @SWG\Info(
  *     title="aweb-framework API文档",
  *     description="aweb-framework API文档",
  *     version="1.0.0",
- *   )
+ *   ),
  * @SWG\Definition(
  *         definition="SuccessModel",
  *         type="object",
@@ -12,7 +16,7 @@
  *         @SWG\Property(property="code",type="integer",format="int32"),
  *         @SWG\Property(property="msg",type="string"),
  *         @SWG\Property(property="data",type="object")
- *     )
+ *     ),
  * @SWG\Definition(
  *         definition="ErrorModel",
  *         type="object",
@@ -21,7 +25,7 @@
  *         @SWG\Property(property="msg",type="string"),
  *         @SWG\Property(property="data",type="string")
  *     )
- *
+ * )
  * Created At 11/04/2018.
  * User: kaiyanh
  */

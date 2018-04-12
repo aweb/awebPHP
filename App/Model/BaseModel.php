@@ -24,7 +24,7 @@ abstract class BaseModel
     /**
      * Get instance of the derived class.
      *
-     * @return \Service\BaseService
+     * @return \Service\BaseModel
      */
     public static function instance()
     {
@@ -32,6 +32,28 @@ abstract class BaseModel
         if (!isset(self::$instances[$className])) {
             self::$instances[$className] = new $className;
         }
+
         return self::$instances[$className];
     }
+
+    /**
+     * get read database obj
+     *
+     * @param string $dbName Database Name
+     */
+    public function read($dbName = 'default')
+    {
+        return \Core\Database::instance()->read($dbName);
+    }
+
+    /**
+     * get read database obj
+     *
+     * @param string $dbName Database Name
+     */
+    public function write($dbName = 'default')
+    {
+        return \Core\Database::instance()->write($dbName);
+    }
+
 }

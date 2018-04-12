@@ -50,3 +50,13 @@ server {
 ├── README.md
 └──  
 ```
+
+## 开源项目与文档
+- swagger-php https://github.com/zircote/swagger-php
+- swagger-ui https://github.com/swagger-api/swagger-ui
+- FastRoute https://github.com/nikic/FastRoute
+- Medoo 
+    https://github.com/catfan/Medoo
+    
+    https://medoo.lvtao.net/1.2/doc.php
+- hassankhan/config https://github.com/hassankhan/config

@@ -4,7 +4,7 @@
  * Created At 11/04/2018 5:09 PM.
  * User: kaiyanh <nzing@aweb.cc>
  */
-$routers = [
+return $routers = [
     'v1' => [
         ['GET', '/demo/list', 'Demo@getList'],
         ['GET', '/demo/info/{id}', 'Demo@info'],
