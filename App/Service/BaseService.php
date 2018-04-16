@@ -26,7 +26,7 @@ abstract class BaseService
      *
      * @return \Service\BaseService
      */
-    public static function instance()
+    public static function getInstance()
     {
         $className = get_called_class();
         if (!isset(self::$instances[$className])) {

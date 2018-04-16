@@ -19,7 +19,7 @@ class DemoService extends BaseService
      */
     function test($userName = '')
     {
-        return \Model\DemoModel::instance()->test($userName);
+        return \Model\DemoModel::getInstance()->test($userName);
     }
 
 }

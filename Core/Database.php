@@ -14,18 +14,18 @@ use Medoo\Medoo;
 class Database
 {
     // Database Instance
-    protected static $instance = array();
+    protected static $instance = null;
     // Write Connects
-    protected static $writeConnections = array();
+    protected static $writeConnections = [];
     // Read Connects
-    protected static $readConnections = array();
+    protected static $readConnections = [];
 
     /**
      * Get instance of the derived class.
      *
      * @return \Core\Database
      */
-    public static function instance()
+    public static function getInstance()
     {
         if (!static::$instance) {
             static::$instance = new static();

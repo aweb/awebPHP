@@ -13,6 +13,14 @@ class Redis
     /**
      * default redis
      */
-    public static $default = [];
-
+    public static $default = [
+        'default' => [
+            'host'           => '127.0.0.1',
+            'port'           => 6379,
+            'db'             => 0,
+            'password'       => '',
+            'timeout'        => 10, // float, value in seconds
+            'retry_interval' => 100, // integer, value in milliseconds
+        ],
+    ];
 }

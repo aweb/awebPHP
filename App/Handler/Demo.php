@@ -43,7 +43,7 @@ class Demo extends Base
     public function getList()
     {
         $userName = isset($_GET['username']) ? $_GET['username'] : 'php';
-        $testInfo = \Service\DemoService::instance()->test($userName);
+        $testInfo = \Service\DemoService::getInstance()->test($userName);
 
         $this->response(self::$resBody['SUCCESS'], $testInfo);
         //var_dump($testInfo, $_REQUEST, $_SESSION);

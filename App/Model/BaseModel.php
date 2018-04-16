@@ -26,7 +26,7 @@ abstract class BaseModel
      *
      * @return \Service\BaseModel
      */
-    public static function instance()
+    public static function getInstance()
     {
         $className = get_called_class();
         if (!isset(self::$instances[$className])) {
@@ -43,7 +43,7 @@ abstract class BaseModel
      */
     public function read($dbName = 'default')
     {
-        return \Core\Database::instance()->read($dbName);
+        return \Core\Database::getInstance()->read($dbName);
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class BaseModel
      */
     public function write($dbName = 'default')
     {
-        return \Core\Database::instance()->write($dbName);
+        return \Core\Database::getInstance()->write($dbName);
     }
 
 }
