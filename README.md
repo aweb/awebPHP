@@ -1,3 +1,16 @@
+## 框架特性
+
+- composer 包管理
+- 简单、高效、稳定、实用
+- 集成FastRoute 路由
+- 集成Medoo 数据ORM管理
+- 集成phpunit单元测试
+- 集成swaggerAPI文档自动生成
+- 错误日志记录
+- 详情请求日志记录
+- APP三层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层】
+
+
 ## swagger API 接口生成说明
 ### 说明
 - 禁止将 swagger目录部署到线上服务器
@@ -16,7 +29,7 @@ server {
 	listen       80;
 	server_name  api.af.com;
 
-	root   /var/www/zestphp/Api/Public;
+	root   /var/www/aweb-framework/Public;
 	index  index.php index.html index.htm;
 
 	location / {
@@ -41,7 +54,13 @@ server {
 │   ├── Model  // Model目录 数据提供与处理层
 │   └──
 │ 
-├── Config  // 配置目录
+├── Config  // 配置文件目录
+├── Core  // 框架核心目录
+├── Logs  // 日志目录
+│   ├── exception // 异常日志
+│   ├── request // 接口请求日志
+├── Test  // phpunit 单元测试目录
+├── Utils  // 工具类
 ├── Public  // 项目入口目录，外网部署
 │   ├── index.php // 单一入口
 ├── Swagger  // 生成api目录，内网环境部署
