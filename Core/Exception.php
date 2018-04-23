@@ -20,9 +20,7 @@ class Exception extends \Exception
         $config = \Config\Logs::$default;
         if ($config['log_level'] <= 400) {
             $dirName = $config['file']['path'].'/exception/'.date('Y-m-d').'.log';
-            // 创建Logger实例
             $logger = new Logger('EXCEPTION');
-            // 添加handler
             $logger->pushHandler(new StreamHandler($dirName, Logger::ERROR));
             $logger->addError($this->__toString());
         }

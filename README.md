@@ -1,14 +1,17 @@
 ## 框架特性
 
+- 为RESTful Api 接口设计
 - composer 包管理
-- 简单、高效、稳定、实用
+- psr-4 命名空间管理
+- 简单、高效、稳定、实用、易拓展
 - 集成FastRoute 路由
-- 集成Medoo 数据ORM管理
+- 集成Medoo 数据库ORM管理
 - 集成phpunit单元测试
 - 集成swaggerAPI文档自动生成
-- 错误日志记录
-- 详情请求日志记录
-- APP三层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层】
+- 集成monolog 日志管理
+    - 错误日志记录
+    - 详情请求日志记录
+- App三层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层】
 
 
 ## swagger API 接口生成说明
