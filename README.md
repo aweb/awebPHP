@@ -27,6 +27,7 @@
 ## Api接口 Demo演示
 - 演示地址： http://api.af.com/v1/demo/list?username=hky
 - aweb-framework.com.conf nginx配置(docker环境配置，适当修改)
+
 ```
 server {
 	listen       80;
@@ -48,6 +49,7 @@ server {
 }
 ```
 - Api 目录结构
+
 ```
 ├── Bootstrap  // 项目初始化
 ├── App // 业务代码目录
