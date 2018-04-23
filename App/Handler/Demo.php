@@ -10,13 +10,12 @@ namespace Handler;
 class Demo extends Base
 {
     // 返回体定义
-    public static $resBody
-        = array(
-            'EXCEPTION' => array('code' => -2, 'msg' => '系统异常，稍后重试'),
-            'FAILED' => array('code' => -1, 'msg' => '系统繁忙，稍后重试'),
-            'SUCCESS' => array('code' => 0, 'msg' => '成功'),
-            'ILLEGAL_ID' => array('code' => 10001, 'msg' => 'ID必须为正整数')
-        );
+    public static $resBody = array(
+        'EXCEPTION'  => array('code' => -2, 'msg' => '系统异常，稍后重试'),
+        'FAILED'     => array('code' => -1, 'msg' => '系统繁忙，稍后重试'),
+        'SUCCESS'    => array('code' => 0, 'msg' => '成功'),
+        'ILLEGAL_ID' => array('code' => 10001, 'msg' => 'ID必须为正整数'),
+    );
 
     /**
      * @SWG\GET(path="/v1/demo/list",
@@ -45,7 +44,7 @@ class Demo extends Base
         $userName = isset($_GET['username']) ? $_GET['username'] : 'php';
         $testInfo = \Service\DemoService::getInstance()->test($userName);
 
-        $this->response(self::$resBody['SUCCESS'], $testInfo);
+        return $this->response(self::$resBody['SUCCESS'], $testInfo);
         //var_dump($testInfo, $_REQUEST, $_SESSION);
     }
 

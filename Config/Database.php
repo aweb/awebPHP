@@ -18,7 +18,7 @@ class Database
             // required
             'database_type' => 'mysql',
             'database_name' => 'apage',
-            'server'        => '127.0.0.1',
+            'server'        => '10.12.100.53',
             'username'      => 'root',
             'password'      => '123456',
             // [optional]
@@ -37,7 +37,7 @@ class Database
             // required
             'database_type' => 'mysql',
             'database_name' => 'apage',
-            'server'        => '127.0.0.1',
+            'server'        => '10.12.100.53',
             'username'      => 'root',
             'password'      => '123456',
             // [optional]

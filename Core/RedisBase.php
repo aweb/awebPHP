@@ -783,6 +783,358 @@ class RedisBase
         return $this->redis->hMget($key, $field);
     }
 
+
+    /*********************队列操作命令************************/
+    /**
+     * lPop同步阻塞版本，直到超时。
+     *
+     * @param array   $keys
+     * @param integer $timeOut
+     *
+     * @return array|bool
+     */
+    public function blPop($keys, $timeOut)
+    {
+        if (!is_array($keys)) {
+            $keys = (array)$keys;
+        }
+
+        return $this->redis->blPop($keys, $timeOut);
+    }
+
+    /**
+     * rPop同步阻塞版本，直到超时。
+     *
+     * @param array   $keys
+     * @param integer $timeOut
+     *
+     * @return array|bool
+     */
+    public function brPop($keys, $timeOut)
+    {
+        if (!is_array($keys)) {
+            $keys = (array)$keys;
+        }
+
+        return $this->redis->blPop($keys, $timeOut);
+    }
+
+    /**
+     * 返回队列中指定索引的元素
+     *
+     * @param string $key
+     * @param string $index
+     *
+     * @return mxied
+     */
+    public function lIndex($key, $index)
+    {
+        return $this->redis->lIndex($key, $index);
+    }
+
+    /**
+     * 删除并返回队列中的头元素
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function lPop($key)
+    {
+        return $this->redis->lPop($key);
+    }
+
+
+    /**
+     * 在队列头部插入一个元素
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @return integer 返回队列长度
+     */
+    public function lPush($key, $value)
+    {
+        return $this->redis->lPush($key, $value);
+    }
+
+    /**
+     * 在队列头插入一个元素 如果key不存在，什么也不做
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @return integer 返回队列长度
+     */
+    public function lPushx($key, $value)
+    {
+        return $this->redis->lPushx($key, $value);
+    }
+
+    /**
+     * 返回队列长度
+     *
+     * @param string $key
+     *
+     * @return integer 队列长度
+     */
+    public function lLen($key)
+    {
+        return $this->redis->lLen($key);
+    }
+
+    /**
+     * 返回队列指定区间的元素
+     *
+     * @param string  $key
+     * @param integer $start
+     * @param integer $end
+     *
+     * @return mixed
+     */
+    public function lRange($key, $start, $end)
+    {
+        return $this->redis->lrange($key, $start, $end);
+    }
+
+
+    /**
+     * 设定队列中指定index的值。
+     *
+     * @param string  $key
+     * @param integer $index
+     * @param string  $value
+     *
+     * @return bool
+     */
+    public function lSet($key, $index, $value)
+    {
+        return $this->redis->lSet($key, $index, $value);
+    }
+
+    /**
+     * 删除值为vaule的count个元素
+     * PHP-REDIS扩展的数据顺序与命令的顺序不太一样，不知道是不是bug
+     * count>0 从尾部开始
+     *  >0　从头部开始
+     *  =0　删除全部
+     *
+     * @param string  $key
+     * @param integer $value
+     * @param integer $count
+     *
+     * @return mixed
+     */
+    public function lRem($key, $value, $count)
+    {
+        return $this->redis->lRem($key, $value, $count);
+    }
+
+    /**
+     * 删除并返回队列中的尾元素
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function rPop($key)
+    {
+        return $this->redis->rPop($key);
+    }
+
+    /**
+     * 删除并返回队列中的尾元素并且插入到另外一个队列中
+     *
+     * @param string $srcKey 原始队列
+     * @param string $dstKey 目标队列
+     *
+     * @return value | bool
+     */
+    public function rPopLPush($srcKey, $dstKey)
+    {
+        return $this->redis->rPopLPush($srcKey, $dstKey);
+    }
+
+    /**
+     * 在队列尾部插入一个元素
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @return integer 返回队列长度
+     */
+    public function rPush($key, $value)
+    {
+        return $this->redis->rPush($key, $value);
+    }
+
+    /**
+     * 在队列尾部插入一个元素 如果key不存在，什么也不做
+     *
+     * @param string $key
+     * @param string $value
+     *
+     * @return integer 返回队列长度
+     */
+    public function rPushx($key, $value)
+    {
+        return $this->redis->rPushx($key, $value);
+    }
+
+
+    /*************redis　无序集合操作命令*****************/
+
+    /**
+     * 添加集合。由于版本问题，扩展不支持批量添加。这里做了封装
+     *
+     * @param string       $key
+     * @param string|array $value
+     */
+    public function sAdd($key, $value)
+    {
+        if (!is_array($value)) {
+            $arr = array($value);
+        } else {
+            $arr = $value;
+        }
+        foreach ($arr as $row) {
+            $this->redis->sAdd($key, $row);
+        }
+    }
+
+    /**
+     * 返回无序集合的元素个数
+     *
+     * @param string $key
+     *
+     * @return integer 集合个数
+     */
+    public function sCard($key)
+    {
+        return $this->redis->sCard($key);
+    }
+
+    /**
+     * 求N个集合的差集
+     *
+     * @param string $key [可以是多个]
+     *
+     * @return array
+     */
+    public function sDiff(...$key)
+    {
+        return $this->redis->sDiff($key);
+    }
+
+    /**
+     * 求N个集合的交集
+     *
+     * @param string $key [可以是多个]
+     *
+     * @return array
+     */
+    public function sInter(...$key)
+    {
+        return $this->redis->sInter($key);
+    }
+
+    /**
+     * 返回集合中所有元素
+     *
+     * @param string $key
+     * @param unkown $value
+     *
+     * @return bool
+     */
+    public function sIsMember($key, $value)
+    {
+        return $this->redis->sIsMember($key, $value);
+    }
+
+    /**
+     * 返回集合中所有元素
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    public function sMembers($key)
+    {
+        return $this->redis->sMembers($key);
+    }
+
+    /**
+     * 移动集合元素
+     *
+     * @param string $srcKey
+     * @param string $ditKey
+     * @param string $member
+     *
+     * @return array
+     */
+    public function sMove($srcKey, $ditKey, $member)
+    {
+        return $this->redis->sMove($srcKey, $ditKey, $member);
+    }
+
+    /**
+     * 从list尾部取出一个元素
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function sPop($key)
+    {
+        return $this->redis->sPop($key);
+    }
+
+    /**
+     * 从list随机返回N个元素
+     *
+     * @param string  $key
+     * @param integer $count
+     *
+     * @return bool
+     */
+    public function sRandMember($key, $count = null)
+    {
+        return $this->redis->sRandMember($key, $count);
+    }
+
+
+    /**
+     * 从集合中删除一个元素
+     *
+     * @param unknown $key
+     * @param unknown $value
+     *
+     * @return mixed
+     */
+    public function sRem($key, $value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                $this->redis->srem($key, $val);
+            }
+            return true;
+        } else {
+            return $this->redis->srem($key, $value);
+        }
+    }
+
+    /**
+     * 多个list去重处理
+     *
+     * @param string  ...$key
+     *
+     * @return array
+     */
+    public function sUnion(...$key)
+    {
+        return $this->redis->sUnion($key);
+    }
+
     /*********************Lists有序集合操作*********************/
 
     /**
@@ -801,6 +1153,32 @@ class RedisBase
     }
 
     /**
+     * 返回集合元素个数。
+     *
+     * @param string $key
+     *
+     * @return integer 元素个数
+     */
+    public function zCard($key)
+    {
+        return $this->redis->zCard($key);
+    }
+
+    /**
+     * 返回order值在start end之间的数量
+     *
+     * @param unknown $key
+     * @param unknown $start
+     * @param unknown $end
+     *
+     * @return integer number
+     */
+    public function zCount($key, $start, $end)
+    {
+        return $this->redis->zCount($key, $start, $end);
+    }
+
+    /**
      * 给$value成员的order值，增加$num,可以为负数
      *
      * @param string $key
@@ -809,9 +1187,9 @@ class RedisBase
      *
      * @return 返回新的order
      */
-    public function zinCry($key, $num, $value)
+    public function zIncrBy($key, $num, $value)
     {
-        return $this->redis->zinCry($key, $num, $value);
+        return $this->redis->zIncrBy($key, $num, $value);
     }
 
     /**
@@ -891,17 +1269,6 @@ class RedisBase
         return $this->redis->zRevRangeByScore($key, $start, $end, $option);
     }
 
-    /**
-     * 返回order值在start end之间的数量
-     *
-     * @param unknown $key
-     * @param unknown $start
-     * @param unknown $end
-     */
-    public function zCount($key, $start, $end)
-    {
-        return $this->redis->zCount($key, $start, $end);
-    }
 
     /**
      * 返回值为value的order值
@@ -951,206 +1318,31 @@ class RedisBase
         return $this->redis->zRemRangeByScore($key, $start, $end);
     }
 
+    /*********************订阅与发布************************/
     /**
-     * 返回集合元素个数。
+     * 向通道发布数据
      *
-     * @param unknown $key
-     */
-    public function zCard($key)
-    {
-        return $this->redis->zCard($key);
-    }
-    /*********************队列操作命令************************/
-
-    /**
-     * 在队列尾部插入一个元素
+     * @param string $channel
+     * @param string $value
      *
-     * @param unknown $key
-     * @param unknown $value
-     * 返回队列长度
+     * @return null
      */
-    public function rPush($key, $value)
+    public function publish($channel, $value)
     {
-        return $this->redis->rPush($key, $value);
+        return $this->redis->publish($channel, $value);
     }
 
     /**
-     * 在队列尾部插入一个元素 如果key不存在，什么也不做
+     * 订阅者(sub)接收消息
      *
-     * @param unknown $key
-     * @param unknown $value
-     * 返回队列长度
-     */
-    public function rPushx($key, $value)
-    {
-        return $this->redis->rPushx($key, $value);
-    }
-
-    /**
-     * 在队列头部插入一个元素
+     * @param array $channels
+     * @param string $callBackFun
      *
-     * @param unknown $key
-     * @param unknown $value
-     * 返回队列长度
+     * @return null
      */
-    public function lPush($key, $value)
+    public function subscribe($channels, $callBackFun)
     {
-        return $this->redis->lPush($key, $value);
-    }
-
-    /**
-     * 在队列头插入一个元素 如果key不存在，什么也不做
-     *
-     * @param unknown $key
-     * @param unknown $value
-     * 返回队列长度
-     */
-    public function lPushx($key, $value)
-    {
-        return $this->redis->lPushx($key, $value);
-    }
-
-    /**
-     * 返回队列长度
-     *
-     * @param unknown $key
-     */
-    public function lLen($key)
-    {
-        return $this->redis->lLen($key);
-    }
-
-    /**
-     * 返回队列指定区间的元素
-     *
-     * @param unknown $key
-     * @param unknown $start
-     * @param unknown $end
-     */
-    public function lRange($key, $start, $end)
-    {
-        return $this->redis->lrange($key, $start, $end);
-    }
-
-    /**
-     * 返回队列中指定索引的元素
-     *
-     * @param unknown $key
-     * @param unknown $index
-     */
-    public function lIndex($key, $index)
-    {
-        return $this->redis->lIndex($key, $index);
-    }
-
-    /**
-     * 设定队列中指定index的值。
-     *
-     * @param unknown $key
-     * @param unknown $index
-     * @param unknown $value
-     */
-    public function lSet($key, $index, $value)
-    {
-        return $this->redis->lSet($key, $index, $value);
-    }
-
-    /**
-     * 删除值为vaule的count个元素
-     * PHP-REDIS扩展的数据顺序与命令的顺序不太一样，不知道是不是bug
-     * count>0 从尾部开始
-     *  >0　从头部开始
-     *  =0　删除全部
-     *
-     * @param unknown $key
-     * @param unknown $count
-     * @param unknown $value
-     */
-    public function lRem($key, $count, $value)
-    {
-        return $this->redis->lRem($key, $value, $count);
-    }
-
-    /**
-     * 删除并返回队列中的头元素。
-     *
-     * @param unknown $key
-     */
-    public function lPop($key)
-    {
-        return $this->redis->lPop($key);
-    }
-
-    /**
-     * 删除并返回队列中的尾元素
-     *
-     * @param unknown $key
-     */
-    public function rPop($key)
-    {
-        return $this->redis->rPop($key);
-    }
-
-    /*************redis　无序集合操作命令*****************/
-
-    /**
-     * 返回集合中所有元素
-     *
-     * @param unknown $key
-     */
-    public function sMembers($key)
-    {
-        return $this->redis->sMembers($key);
-    }
-
-    /**
-     * 求2个集合的差集
-     *
-     * @param unknown $key1
-     * @param unknown $key2
-     */
-    public function sDiff($key1, $key2)
-    {
-        return $this->redis->sDiff($key1, $key2);
-    }
-
-    /**
-     * 添加集合。由于版本问题，扩展不支持批量添加。这里做了封装
-     *
-     * @param unknown      $key
-     * @param string|array $value
-     */
-    public function sAdd($key, $value)
-    {
-        if (!is_array($value)) {
-            $arr = array($value);
-        } else {
-            $arr = $value;
-        }
-        foreach ($arr as $row) {
-            $this->redis->sAdd($key, $row);
-        }
-    }
-
-    /**
-     * 返回无序集合的元素个数
-     *
-     * @param unknown $key
-     */
-    public function scard($key)
-    {
-        return $this->redis->scard($key);
-    }
-
-    /**
-     * 从集合中删除一个元素
-     *
-     * @param unknown $key
-     * @param unknown $value
-     */
-    public function srem($key, $value)
-    {
-        return $this->redis->srem($key, $value);
+        return $this->redis->subscribe($channels, $callBackFun);
     }
 
 

@@ -18,6 +18,6 @@ class DemoModel extends BaseModel
     function test($userName) {
         $db = $this->read();
         $datas = $db->select("user", "*", ['id[>=]'=>1]);
-        return 'Welcome '.$userName."<>".json_encode($datas);
+        return $datas;
     }
 }

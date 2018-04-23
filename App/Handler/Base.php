@@ -32,8 +32,19 @@
 
 namespace Handler;
 
-abstract class Base
+use Core\ChildProxy;
+use Core\Child;
+
+abstract class Base extends Child
 {
+    /**
+     * Controller constructor.
+     * @param string $proxy
+     */
+    public function __construct($proxy = ChildProxy::class)
+    {
+        parent::__construct($proxy);
+    }
 
     /**
      * 通过定义返回体的方式返回数据
@@ -54,7 +65,7 @@ abstract class Base
             $res['data'] = $data;
         }
         header('Content-Type: application/json');
-        exit(json_encode($res));
+        return json_encode($res);
     }
 
 }

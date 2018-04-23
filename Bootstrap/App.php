@@ -8,7 +8,6 @@
 
 namespace Bootstrap;
 
-
 class App
 {
     /**
@@ -28,8 +27,9 @@ class App
     {
         $className = get_called_class();
         if (!isset(self::$instances[$className])) {
-            self::$instances[$className] = new $className;
+            self::$instances[$className] = new $className($className);
         }
+
         return self::$instances[$className];
     }
 
@@ -40,7 +40,7 @@ class App
     {
         $dispatcher = \FastRoute\cachedDispatcher(function (\FastRoute\RouteCollector $r) use ($routersConfig) {
             foreach ($routersConfig as $group => $child) {
-                $r->addGroup('/' . $group, function (\FastRoute\RouteCollector $rChild) use ($child) {
+                $r->addGroup('/'.$group, function (\FastRoute\RouteCollector $rChild) use ($child) {
                     if (!empty($child) && is_array($child)) {
                         foreach ($child as $item) {
                             $rChild->addRoute($item[0], $item[1], $item[2]);
@@ -49,7 +49,7 @@ class App
                 });
             }
         }, [
-            'cacheFile' => BASE_ROOT . '/temp/caches/route.cache', /* required */
+            'cacheFile'     => BASE_ROOT.'/temp/caches/route.cache', /* required */
             'cacheDisabled' => ENV == "prod" ? false : true,     /* 测试环境缓存不生效 */
         ]);
 
@@ -64,23 +64,26 @@ class App
         $uri = rawurldecode($uri);
 
         $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-        switch ($routeInfo[0]) {
-            case \FastRoute\Dispatcher::NOT_FOUND:
-                // ... 404 Not Found
-                break;
-            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                $allowedMethods = $routeInfo[1];
-                // ... 405 Method Not Allowed
-                break;
-            case \FastRoute\Dispatcher::FOUND:
-                $handler = $routeInfo[1];
-                $vars = $routeInfo[2];
-                list($class, $method) = explode('@', $handler);
-                $class = '\Handler\\' . $class;
-                $obj = new $class();
-                call_user_func_array(array(&$obj, $method), $vars);
-                // ... call $handler with $vars
-                break;
+        try {
+            switch ($routeInfo[0]) {
+                case \FastRoute\Dispatcher::NOT_FOUND:
+                    // ... 404 Not Found
+                    break;
+                case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                    $allowedMethods = $routeInfo[1];
+                    // ... 405 Method Not Allowed
+                    break;
+                case \FastRoute\Dispatcher::FOUND:
+                    $handler = $routeInfo[1];
+                    $vars = $routeInfo[2];
+                    list($class, $method) = explode('@', $handler);
+                    $class = '\Handler\\'.$class;
+                    $obj = new $class();
+                    $obj->getProxy()->__call($method, $vars);
+                    break;
+            }
+        } catch (\Exception $e) {
+            throw new \Core\Exception($e);
         }
 
     }

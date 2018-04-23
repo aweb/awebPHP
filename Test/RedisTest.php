@@ -372,7 +372,7 @@ class RedisTest extends TestCase
         $redis->hSet('h', 'key1', 'hello');
         $redis->hSet('h', 'key2', 'hello2');
         $res = $redis->hKeys('h');
-        $this->assertEquals($res, ['key1','key2']);
+        $this->assertEquals($res, ['key1', 'key2']);
     }
 
     public function testHVals()
@@ -384,8 +384,9 @@ class RedisTest extends TestCase
         $redis->hSet('h', 'c', 'z');
         $redis->hSet('h', 'd', 't');
         $res = $redis->hVals('h');
-        $this->assertEquals($res, ['x','y','z','t']);
+        $this->assertEquals($res, ['x', 'y', 'z', 't']);
     }
+
     public function testHGetAll()
     {
         $redis = $this->redis;
@@ -395,7 +396,7 @@ class RedisTest extends TestCase
         $redis->hSet('h', 'c', 'z');
         $redis->hSet('h', 'd', 't');
         $res = $redis->hGetAll('h');
-        $this->assertEquals($res, ['a'=>'x','b'=>'y','c'=>'z','d'=>'t']);
+        $this->assertEquals($res, ['a' => 'x', 'b' => 'y', 'c' => 'z', 'd' => 't']);
     }
 
     public function testHExists()
@@ -408,29 +409,31 @@ class RedisTest extends TestCase
         $res = $redis->hExists('h', 'NonExistingKey');
         $this->assertEquals($res, false);
     }
+
     public function testHIncrBy()
     {
         $redis = $this->redis;
         $redis->del('h');
         $redis->hIncrBy('h', 'x', 2);
-        $res = $redis->hGet('h','x');
+        $res = $redis->hGet('h', 'x');
         $this->assertEquals($res, 2);
         $redis->hIncrBy('h', 'x', 1);
-        $res = $redis->hGet('h','x');
+        $res = $redis->hGet('h', 'x');
         $this->assertEquals($res, 3);
     }
+
     public function testHIncrByFloat()
     {
         $redis = $this->redis;
         $redis->del('h');
         $redis->hIncrByFloat('h', 'x', 1.5);
-        $res = $redis->hGet('h','x');
+        $res = $redis->hGet('h', 'x');
         $this->assertEquals($res, 1.5);
         $redis->hIncrByFloat('h', 'x', 1.0);
-        $res = $redis->hGet('h','x');
+        $res = $redis->hGet('h', 'x');
         $this->assertEquals($res, 2.5);
         $redis->hIncrByFloat('h', 'x', -1.1);
-        $res = $redis->hGet('h','x');
+        $res = $redis->hGet('h', 'x');
         $this->assertEquals($res, 1.4);
     }
 
@@ -440,7 +443,7 @@ class RedisTest extends TestCase
         $redis->del('user:1');
         $redis->hMSet('user:1', array('name' => 'Joe', 'salary' => 2000));
         $redis->hIncrBy('user:1', 'salary', 100); // Joe earns 100 more now.
-        $res =  $redis->hget('user:1', 'salary');
+        $res = $redis->hget('user:1', 'salary');
         $this->assertEquals($res, 2100);
         $this->redis->del('user:1');
     }
@@ -452,7 +455,321 @@ class RedisTest extends TestCase
         $redis->hSet('h', 'field1', 'value1');
         $redis->hSet('h', 'field2', 'value2');
         $res = $redis->hMGet('h', array('field1', 'field2'));
-        $this->assertEquals($res, ['field1'=>'value1','field2'=>'value2']);
+        $this->assertEquals($res, ['field1' => 'value1', 'field2' => 'value2']);
+    }
+
+    /*********************队列操作命令************************/
+    public function testBlPop()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $redis->lPush('key1', 'A');
+        $redis->lPush('key1', 'B');
+        $res = $redis->blPop('key1', 10);
+        $this->assertEquals($res, ['key1', 'B']);
+
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $redis->lPush('key1', 'A');
+        $redis->lPush('key1', 'B');
+        $res = $redis->brPop('key1', 10);
+        $this->assertEquals($res, ['key1', 'B']);
+    }
+
+    public function testLIndex()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->lPush('key1', 'A');
+        $redis->lPush('key1', 'B');
+        $res = $redis->lIndex('key1', 0);
+        $this->assertEquals($res, "B");
+    }
+
+    public function testLPop()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->rPush('key1', 'A');
+        $redis->rPush('key1', 'B');
+        $redis->rPush('key1', 'C'); /* key1 => [ 'A', 'B', 'C' ] */
+        $res = $redis->lPop('key1', 0);/* key1 => [ 'B', 'C' ] */
+        $this->assertEquals($res, "A");
+    }
+
+    public function testLPush()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $res = $redis->lPushx('key1', 'C'); // returns 0
+        $this->assertEquals($res, 0);
+        $redis->lPush('key1', 'C'); // returns 1
+        $res = $redis->lPush('key1', 'B'); // returns 2
+        $this->assertEquals($res, 2);
+        $res = $redis->lPop("key1");
+        $this->assertEquals($res, "B");
+        $res = $redis->lLen("key1");
+        $this->assertEquals($res, 1);
+    }
+
+    public function testLRange()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->rPush('key1', 'A');
+        $redis->rPush('key1', 'B');
+        $redis->rPush('key1', 'C');
+        $res = $redis->lRange('key1', 0, -1);/* key1 => [ 'A', 'B', 'C' ] */
+        $this->assertEquals($res, ['A', 'B', 'C']);
+        $res = $redis->lRange('key1', 0, 1);/* key1 => [ 'A', 'B' ] */
+        $this->assertEquals($res, ['A', 'B']);
+    }
+
+    public function testLSet()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->rPush('key1', 'A');
+        $redis->rPush('key1', 'B');
+        $redis->rPush('key1', 'C'); /* key1 => [ 'A', 'B', 'C' ] */
+        $redis->lIndex('key1', 0); /* 'A' */
+        $redis->lSet('key1', 0, 'X');
+        $res = $redis->lIndex('key1', 0); /* 'X' */
+        $this->assertEquals($res, "X");
+    }
+
+    public function testLRem()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->lPush('key1', 'A');
+        $redis->lPush('key1', 'B');
+        $redis->lPush('key1', 'C');
+        $redis->lPush('key1', 'A');
+        $redis->lPush('key1', 'A');
+
+        $redis->lRange('key1', 0, -1); /* array('A', 'A', 'C', 'B', 'A') */
+        $redis->lRem('key1', 'A', 2); /* 2 */
+        $res = $redis->lRange('key1', 0, -1); /* array('C', 'B', 'A') */
+        $this->assertEquals($res, ['C', 'B', 'A']);
+    }
+
+    public function testRPop()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->rPush('key1', 'A');
+        $redis->rPush('key1', 'B');
+        $redis->rPush('key1', 'C'); /* key1 => [ 'A', 'B', 'C' ] */
+        $redis->rPop('key1'); /* key1 => [ 'A', 'B' ] */
+        $res = $redis->lRange("key1", 0, -1);
+        $this->assertEquals($res, ['A', 'B']);
+    }
+
+    public function testRPopLPush()
+    {
+        $redis = $this->redis;
+        $redis->del(['x', 'y']);
+
+        $redis->lPush('x', 'abc');
+        $redis->lPush('x', 'def');
+        $redis->lPush('y', '123');
+        $redis->lPush('y', '456');
+
+        $res = $redis->rPopLPush('x', 'y');
+        $this->assertEquals($res, 'abc');
+        $res = $redis->lRange('x', 0, -1);
+        $this->assertEquals($res, ['def']);
+        $res = $redis->lRange('y', 0, -1);
+        $this->assertEquals($res, ["abc", "456", "123"]);
+    }
+
+    public function testRPush()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $res = $redis->rPushX('key1', 'A'); // returns 0
+        $this->assertEquals($res, 0);
+
+        $redis->rPush('key1', 'A'); // returns 1
+        $redis->rPush('key1', 'B'); // returns 2
+        $res = $redis->rPush('key1', 'C'); // returns 3
+        $this->assertEquals($res, 3);
+        /* key1 now points to the following list: [ 'A', 'B', 'C' ] */
+    }
+
+    /*************redis　无序集合操作命令*****************/
+
+    public function testSAdd()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->sAdd('key1', 'member1'); /* 1, 'key1' => {'member1'} */
+        $redis->sAdd('key1', ['member2', 'member3']); /* 2, 'key1' => {'member1', 'member2', 'member3'}*/
+        $redis->sAdd('key1', 'member2'); /* 0, 'key1' => {'member1', 'member2', 'member3'}*/
+        $res = $redis->scard('key1');
+        $this->assertEquals($res, 3);
+
+    }
+
+    public function testSDiff()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+
+        $redis->sAdd('key1', '1');
+        $redis->sAdd('key1', '2');
+        $redis->sAdd('key1', '3');
+        $redis->sAdd('key1', '4');
+
+        $redis->sAdd('key2', '1');
+
+        $res = $redis->sDiff('key1', 'key2');
+        $this->assertEquals($res, [2, 3, 4]);
+
+    }
+
+    public function testSInter()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2', 'key3']);
+        $redis->sAdd('key1', 'val1');
+        $redis->sAdd('key1', 'val2');
+        $redis->sAdd('key1', 'val3');
+        $redis->sAdd('key1', 'val4');
+
+        $redis->sAdd('key2', 'val3');
+        $redis->sAdd('key2', 'val4');
+
+        $redis->sAdd('key3', 'val3');
+        $redis->sAdd('key3', 'val4');
+
+        $res = $redis->sInter('key1', 'key2', 'key3');
+        $this->assertNotEmpty($res);
+
+    }
+
+    public function testSIsMember()
+    {
+        $redis = $this->redis;
+        $redis->del('key1');
+        $redis->sAdd('key1', 'member1');
+        $redis->sAdd('key1', 'member2');
+        $redis->sAdd('key1', 'member3'); /* 'key1' => {'member1', 'member2', 'member3'}*/
+
+        $res = $redis->sIsMember('key1', 'member1'); /* TRUE */
+        $this->assertEquals($res, true);
+        $res = $redis->sIsMember('key1', 'memberX'); /* FALSE */
+        $this->assertEquals($res, false);
+
+    }
+
+    public function testSMember()
+    {
+        $redis = $this->redis;
+        $redis->del('s');
+        $redis->sAdd('s', 'a');
+        $redis->sAdd('s', 'b');
+        $res = $redis->sMembers('s');
+        $this->assertNotEmpty($res);
+
+    }
+
+    public function testSMove()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $redis->sAdd('key1', 'member11');
+        $redis->sAdd('key1', 'member12');
+        $redis->sAdd('key1', 'member13'); /* 'key1' => {'member11', 'member12', 'member13'}*/
+        $redis->sAdd('key2', 'member21');
+        $redis->sAdd('key2', 'member22'); /* 'key2' => {'member21', 'member22'}*/
+        $redis->sMove('key1', 'key2', 'member13'); /* 'key1' =>  {'member11', 'member12'} */
+        $res = $redis->sMembers('key2');
+        $this->assertNotEmpty($res);
+
+    }
+
+    public function testSRem()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $redis->sAdd('key1', 'member1');
+        $redis->sAdd('key1', 'member2');
+        $redis->sRem('key1', 'member2'); /*return 2. 'key1' => {'member1'} */
+        $res = $redis->sMembers('key1');
+
+        $this->assertEquals($res, ['member1']);
+
+    }
+
+    public function testSUnion()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $redis->sAdd('s0', '1');
+        $redis->sAdd('s0', '2');
+        $redis->sAdd('s1', '3');
+        $redis->sAdd('s1', '1');
+        $redis->sAdd('s2', '3');
+        $redis->sAdd('s2', '4');
+
+        $res = $redis->sUnion('s0', 's1', 's2');
+        $this->assertEquals($res, ['1', '2', '3', '4']);
+
+    }
+
+    /*********************Lists有序集合操作*********************/
+    public function testZAdd()
+    {
+        $redis = $this->redis;
+        $redis->del('key');
+        $redis->zAdd('key', 1, 'val1');
+        $redis->zAdd('key', 0, 'val0');
+        $redis->zAdd('key', 5, 'val5');
+        $res = $redis->zRange('key', 0, -1); // array(val0, val1, val5)
+        $this->assertEquals($res, ['val0', 'val1', 'val5']);
+        // zCard
+        $res = $redis->zCard("key");
+        $this->assertEquals($res, 3);
+        $redis->zAdd('key', 3, 'val2');
+        $res = $redis->zCount("key", 1, 5);
+        $this->assertEquals($res, 3);
+    }
+
+    public function testZIncrBy()
+    {
+        $redis = $this->redis;
+        $redis->del('key');
+        $redis->zIncrBy('key', 2.5, 'member1');
+        $redis->zIncrBy('key', 1, 'member1');
+        $res = $redis->zRange('key', 0, -1);
+        $this->assertEquals($res, ['member1']);
+        $res = $redis->zScore('key', 'member1');
+        $this->assertEquals($res, 3.5);
+    }
+
+    public function testMulti()
+    {
+        $redis = $this->redis;
+        $redis->del(['key1', 'key2']);
+        $res = $redis->multi()
+            ->set('key1', 'val1')
+            ->get('key1')
+            ->set('key2', 'val2')
+            ->get('key2')
+            ->exec();
+        $this->assertEquals($res, [true, 'val1', true, 'val2']);
+        $redis->del(['key1', 'key2']);
+        $res = $redis->multi()
+            ->set('key1', 'val1')
+            ->get('key1')
+            ->set('key2', 'val2')
+            ->get('key2')
+            ->discard();
+        $this->assertEquals($res, true);
+        $res = $redis->get('key1');
+        $this->assertEquals($res, false);
     }
 
     /*******************************hash表操作函数*********************************/
@@ -460,7 +777,7 @@ class RedisTest extends TestCase
     public static function tearDownAfterClass()
     {
         $redis = \Core\RedisBase::getInstance('default');
-        $redis->del(['key', 'key1', 'key2', 'key3', 'key4', "x", "y","h"]);
+        $redis->del(['key', 'key1', 'key2', 'key3', 'key4', "x", "y", "h", 's', 's0', 's1', 's2']);
         $redis->close();
     }
 
