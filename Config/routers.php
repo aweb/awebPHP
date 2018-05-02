@@ -6,7 +6,7 @@
  */
 return $routers = [
     'v1' => [
-        ['GET', '/demo/list', 'Demo@getList'],
+        [['GET','POST'], '/demo/list', 'Demo@getList'],
         ['GET', '/demo/info/{id}', 'Demo@info'],
         ['POST', '/demo/create', 'Demo@create'],
         ['PUT', '/demo/update', 'Demo@update'],

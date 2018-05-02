@@ -5,6 +5,11 @@
         "description": "aweb-framework API\u6587\u6863",
         "version": "1.0.0"
     },
+    "host": "doc.af.com",
+    "basePath": "/v1",
+    "schemes": [
+        "http"
+    ],
     "paths": {
         "/v1/demo/list": {
             "get": {
@@ -129,11 +134,11 @@
             }
         },
         "/v1/demo/update": {
-            "put": {
+            "post": {
                 "tags": [
                     "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
                 ],
-                "summary": "\u521b\u5efa",
+                "summary": "\u66f4\u65b0",
                 "description": "update",
                 "operationId": "update",
                 "produces": [
@@ -172,7 +177,7 @@
             }
         },
         "/v1/demo/delete": {
-            "delete": {
+            "post": {
                 "tags": [
                     "AppDemo \u63a5\u53e3\u6f14\u793a\u7c7b"
                 ],

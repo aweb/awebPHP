@@ -16,6 +16,7 @@ class ChildProxy extends Proxy
 {
     protected $class_name;
 
+
     public function __construct($own)
     {
         parent::__construct($own);
@@ -44,13 +45,16 @@ class ChildProxy extends Proxy
 
     public function beforeCall($name, $arguments = null)
     {
-        $this->own->getContext()['requestId'] = $this->getMillisecond();
-        $this->own->getContext()['server'] = $_SERVER;
-        $this->own->getContext()['get'] = $_GET;
-        $this->own->getContext()['post'] = $_POST;
-        $this->own->getContext()['cookie'] = $_COOKIE;
-        $this->own->getContext()['file'] = $_FILES;
-        $this->own->getContext()['RunStack'][] = $this->class_name."::".$name;
+        $obj = new \stdClass;
+        $obj->requestId = $this->getMillisecond(true);
+        $obj->server = $_SERVER;
+        $obj->get = $_GET;
+        $obj->post = $_POST;
+        $obj->cookie = $_COOKIE;
+        $obj->file = $_FILES;
+        $obj->Controller = $this->class_name;
+        $obj->action = $name;
+        $this->setContext($obj);
         unset($_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
 
     }
@@ -93,11 +97,16 @@ class ChildProxy extends Proxy
         }
     }
 
-    public function getMillisecond()
+    public function getMillisecond($getRequest = false)
     {
-        list($t1, $t2) = explode(' ', microtime());
+        if ($getRequest && isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+            return (float)sprintf('%.0f', $_SERVER['REQUEST_TIME_FLOAT'] * 1000);
+        } else {
+            list($t1, $t2) = explode(' ', microtime());
 
-        return (float)sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
+            return (float)sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
+        }
+
     }
 
 }

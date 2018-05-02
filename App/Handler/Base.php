@@ -3,7 +3,7 @@
  * @SWG\Swagger(
  *     schemes={"http"},
  *     host="doc.af.com",
- *     basePath="/v2",
+ *     basePath="/v1",
  * @SWG\Info(
  *     title="aweb-framework API文档",
  *     description="aweb-framework API文档",
@@ -35,8 +35,10 @@ namespace Handler;
 use Core\ChildProxy;
 use Core\Child;
 
+
 abstract class Base extends Child
 {
+
     /**
      * Controller constructor.
      * @param string $proxy

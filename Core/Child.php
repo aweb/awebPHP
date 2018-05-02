@@ -8,9 +8,9 @@
 
 namespace Core;
 
-
 use Core\AOP\AOP;
 use Core\AOP\Proxy;
+use Core\HttpInput;
 
 class Child extends AOP
 {
@@ -116,6 +116,14 @@ class Child extends AOP
     public function setContext(&$context)
     {
         $this->context = &$context;
+    }
+
+    public function httpInput()
+    {
+        $res = new HttpInput();
+        $res->set($this->context);
+
+        return $res;
     }
 
     /**

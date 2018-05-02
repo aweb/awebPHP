@@ -7,6 +7,7 @@
 
 namespace Handler;
 
+
 class Demo extends Base
 {
     // 返回体定义
@@ -43,9 +44,10 @@ class Demo extends Base
     {
         $userName = isset($_GET['username']) ? $_GET['username'] : 'php';
         $testInfo = \Service\DemoService::getInstance()->test($userName);
-
+        $get = $this->httpInput()->getAllGet();
+        $headers =  $this->httpInput()->server('HOME');
+        var_dump($this->httpInput()->getAllGet());exit;
         return $this->response(self::$resBody['SUCCESS'], $testInfo);
-        //var_dump($testInfo, $_REQUEST, $_SESSION);
     }
 
     /**
@@ -99,9 +101,9 @@ class Demo extends Base
     }
 
     /**
-     * @SWG\PUT(path="/v1/demo/update",
+     * @SWG\POST(path="/v1/demo/update",
      *   tags={"AppDemo 接口演示类"},
-     *   summary="创建",
+     *   summary="更新",
      *   description="update",
      *   operationId="update",
      *   produces={"application/json"},
@@ -125,7 +127,7 @@ class Demo extends Base
     }
 
     /**
-     * @SWG\DELETE(path="/v1/demo/delete",
+     * @SWG\POST(path="/v1/demo/delete",
      *   tags={"AppDemo 接口演示类"},
      *   summary="删除",
      *   description="delete",
