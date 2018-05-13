@@ -6,4 +6,11 @@ node {
     customImage.inside {
         sh 'run.sh'
     }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'uname -a'
+            }
+        }
+    }
 }
