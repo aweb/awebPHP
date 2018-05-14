@@ -13,7 +13,7 @@ if (ENV == 'PROD') {
 //error_reporting(0);
 define('BASE_ROOT', __DIR__ . "/../");
 // 引入自动加载
-require BASE_ROOT . "/Vendor/autoload.php";
+require BASE_ROOT . "/vendor/autoload.php";
 // 载入路由配置
 require BASE_ROOT . "/Config/routers.php";
 

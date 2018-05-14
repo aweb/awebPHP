@@ -71,16 +71,20 @@ class ChildProxy extends Proxy
                     $logger = new Logger('REQUEST');
                     // 添加handler
                     $logger->pushHandler(new StreamHandler($dirName, Logger::INFO));
-                    $content = $this->own->getContext();
+                    $content = (array)$this->own->getContext();
                     $ip = isset($content['server']['REMOTE_ADDR']) ? $content['server']['REMOTE_ADDR'] : '';
                     $method = isset($content['server']['REQUEST_METHOD']) ? $content['server']['REQUEST_METHOD'] : '';
                     // 开始使用
                     $result = [
-                        'request'  => '',
+                        'request'  => [
+                            'get' => '',
+                            'post' => '',
+                            'file' => ''
+                        ],
                         'response' => '',
                     ];
-                    if (!empty($content['get'])) {
-                        $result['request']['get'] = $content['get'];
+                    if (!empty($content['gets'])) {
+                        $result['request']['get'] = $content['gets'];
                     }
                     if (!empty($content['post'])) {
                         $result['request']['post'] = $content['post'];

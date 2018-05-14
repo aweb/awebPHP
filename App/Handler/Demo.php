@@ -43,11 +43,11 @@ class Demo extends Base
     public function getList()
     {
         $userName = isset($_GET['username']) ? $_GET['username'] : 'php';
-        $testInfo = \Service\DemoService::getInstance()->test($userName);
+        //$testInfo = \Service\DemoService::getInstance()->test($userName);
         $get = $this->httpInput()->getAllGet();
-        $headers =  $this->httpInput()->server('HOME');
-        var_dump($this->httpInput()->getAllGet());exit;
-        return $this->response(self::$resBody['SUCCESS'], $testInfo);
+        $get['hello'] = 'world';
+        //$headers =  $this->httpInput()->server('HOME');
+        return $this->response(self::$resBody['SUCCESS'], $get);
     }
 
     /**
