@@ -6,6 +6,8 @@ MAINTAINER kaiyanh
 ADD ./nginx-site.conf /etc/nginx/sites-available/default.conf 
 ADD . /var/www/html
 
+RUN composer install
+
 #EXPOSE 80
 
 
