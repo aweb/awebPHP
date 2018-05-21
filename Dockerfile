@@ -8,6 +8,8 @@ ADD . /var/www/html
 
 RUN composer install
 
+COPY ./vendor /var/www/html/
+
 #EXPOSE 80
 
 
