@@ -12,6 +12,7 @@ if (ENV == 'PROD') {
 }
 //error_reporting(0);
 define('BASE_ROOT', __DIR__ . "/../");
+define('VIEW_ROOT', __DIR__ . "/../App/View/");
 // 引入自动加载
 require BASE_ROOT . "/vendor/autoload.php";
 // 载入路由配置

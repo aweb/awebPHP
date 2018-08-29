@@ -40,13 +40,19 @@ class App
     {
         $dispatcher = \FastRoute\cachedDispatcher(function (\FastRoute\RouteCollector $r) use ($routersConfig) {
             foreach ($routersConfig as $group => $child) {
-                $r->addGroup('/'.$group, function (\FastRoute\RouteCollector $rChild) use ($child) {
-                    if (!empty($child) && is_array($child)) {
-                        foreach ($child as $item) {
-                            $rChild->addRoute($item[0], $item[1], $item[2]);
-                        }
+                if ($group == 'un_group') {
+                    foreach ($child as $item) {
+                        $r->addRoute($item[0], $item[1], $item[2]);
                     }
-                });
+                } else {
+                    $r->addGroup('/'.$group, function (\FastRoute\RouteCollector $rChild) use ($child) {
+                        if (!empty($child) && is_array($child)) {
+                            foreach ($child as $item) {
+                                $rChild->addRoute($item[0], $item[1], $item[2]);
+                            }
+                        }
+                    });
+                }
             }
         }, [
             'cacheFile'     => BASE_ROOT.'/temp/caches/route.cache', /* required */

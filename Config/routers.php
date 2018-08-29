@@ -11,5 +11,9 @@ return $routers = [
         ['POST', '/demo/create', 'Demo@create'],
         ['PUT', '/demo/update', 'Demo@update'],
         ['DELETE', '/demo/delete', 'Demo@delete'],
-    ]
+    ],
+    'un_group' => [
+        ['GET', '/', 'Home@index'],
+        ['GET', '/home/index', 'Home@index'],
+    ],
 ];
