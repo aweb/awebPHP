@@ -1,4 +1,4 @@
-## PHP Smart Api Framework
+## Aweb PHP Smart Simple Framework
 
 ## 框架特性
 
@@ -13,7 +13,8 @@
 - 集成monolog 日志管理
     - 错误日志记录
     - 详情请求日志记录
-- App三层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层】
+- App - API： 三层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层】
+- App - MVC:  四层架构【Handler-入口层 -》Service-业务逻辑处理层 -》 Model-数据提供层-》View -视图层】
 
 
 ## swagger API 接口生成说明
